@@ -1,0 +1,668 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>AppsDev</title>
+  <meta name="description" content="Zahid Abbas – Android apps developer (Java, Kotlin, Jetpack Compose). Portfolio and contact." />
+  <link rel="icon" type="image/png" href="assets/fav_icon1.png">
+  <style>
+    :root{
+      --bg:#0f1724; --card:#0b1220; --muted:#9aa4b2; --accent1:#6ee7b7; --accent2:#60a5fa; --glass: rgba(255,255,255,0.07);
+      --max-width:1100px;
+      font-family:Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+    }
+    *{box-sizing:border-box}
+    body{margin:0; background: linear-gradient(180deg, #071025 0%, #07112a 60%); color:#e6eef8; -webkit-font-smoothing:antialiased}
+    .container{max-width:var(--max-width); margin:0 auto; padding:28px}
+    header{display:flex;align-items:center;justify-content:space-between;padding:12px 0}
+    .brand{display:flex;align-items:center;gap:12px}
+    .logo{width:48px;height:48px;border-radius:10px;background:linear-gradient(135deg,var(--accent1),var(--accent2));display:flex;align-items:center;justify-content:center;font-weight:700;color:#04202b}
+    nav a{color:var(--muted);text-decoration:none;margin-left:18px;font-weight:600}
+    nav a:hover{color:var(--accent2)}
+    .hero{display:grid;grid-template-columns:1fr 360px;gap:28px;align-items:center;padding:36px 0}
+    .card{background:linear-gradient(180deg, rgba(255,255,255,0.04), rgba(255,255,255,0.02)); border-radius:16px; padding:28px; box-shadow: 0 6px 30px rgba(2,6,23,0.6);}
+    h1{margin:0;font-size:34px}
+    .sub{color:var(--muted);margin-top:10px;line-height:1.6}
+    .cta{display:flex;gap:12px;margin-top:18px}
+    .btn{padding:10px 16px;border-radius:10px;text-decoration:none;font-weight:700;cursor:pointer}
+    .btn-primary{background:linear-gradient(90deg,var(--accent1),var(--accent2));color:#04202b}
+    .btn-ghost{background:transparent;border:1px solid rgba(255,255,255,0.2);color:#e6eef8}
+    .profile-wrap{position:relative;align-self:start}
+    .profile{width:320px;height:320px;border-radius:18px;overflow:hidden;display:block;background:linear-gradient(135deg,#0ea5a4, #3b82f6);padding:10px}
+    .profile img{width:100%;height:100%;object-fit:cover;border-radius:12px;display:block}
+    .profile-fallback{width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-size:72px;font-weight:700;color:#ffffff;border-radius:12px}
+    section{margin-top:36px}
+    .grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+    .skill{background:transparent;padding:18px;border-radius:12px;border:1px solid rgba(255,255,255,0.06)}
+    .skill h4{margin:0 0 8px 0}
+    .muted{color:var(--muted)}
+
+    .projects-slider{
+      position:relative;
+      overflow-x:auto;
+      overflow-y:hidden;
+      -webkit-overflow-scrolling: touch;
+      padding-bottom:8px;
+      cursor: grab;
+      scroll-behavior: auto;
+    }
+    .projects-slider.dragging {
+      cursor: grabbing;
+    }
+    .projects-track{
+      display:flex;
+      gap:24px;
+      padding:12px;
+      align-items:stretch;
+      user-select:none;
+      -webkit-user-select:none;
+      touch-action: pan-y;
+    }
+
+    .project-card{
+      width: 280px;
+      height: 360px;
+      flex: none;
+      border-radius:16px;
+      padding:0;
+      background:linear-gradient(180deg, rgba(255,255,255,0.04), rgba(255,255,255,0.01));
+      border:1px solid rgba(255,255,255,0.04);
+      box-shadow:0 12px 34px rgba(2,6,23,0.6);
+      display:flex;
+      flex-direction:column;
+      overflow:hidden;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .project-card-link{
+      display:block;
+      text-decoration:none;
+      color:inherit;
+      cursor: pointer;
+      -webkit-user-drag: none;
+    }
+
+    .project-card:hover{
+      transform:translateY(-8px);
+      box-shadow:0 28px 60px rgba(2,6,23,0.72);
+    }
+
+    .project-image{
+      height: 160px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      background:linear-gradient(135deg,var(--accent1),var(--accent2));
+      color:#ffffff;
+      font-weight:700;
+      font-size:28px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .project-image img{
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .project-image-text{
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-size: 28px;
+      font-weight: 700;
+      color: #ffffff;
+      z-index: 1;
+    }
+
+    .project-body{
+      flex:1;
+      padding:18px;
+      display:flex;
+      flex-direction:column;
+      gap: 12px;
+    }
+
+    .project-body h3{
+      margin:0;
+      font-size:18px;
+      color:#e6eef8;
+      font-weight:700;
+      line-height: 1.3;
+    }
+
+    .project-body p{
+      margin:0;
+      color:var(--muted);
+      font-size:14px;
+      line-height:1.5;
+      flex: 1;
+      display: -webkit-box;
+      -webkit-box-orient: vertical;
+      -webkit-line-clamp: 6;
+      line-clamp: 6;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .contact-cards{display:flex;gap:12px;flex-wrap:wrap}
+    .contact-card{
+      padding:12px 14px;
+      border-radius:10px;
+      background:var(--glass);
+      display:flex;
+      gap:12px;
+      align-items:center;
+      color:#e6eef8;
+      text-decoration:none;
+    }
+    .contact-card:hover{
+      background:rgba(255,255,255,0.1);
+    }
+    .icon{
+      width:36px;
+      height:36px;
+      border-radius:8px;
+      background:rgba(255,255,255,0.1);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+    }
+
+    footer{margin-top:36px;padding:18px 0;color:var(--muted);text-align:center}
+
+    @media (max-width:900px){
+      .hero{grid-template-columns:1fr;}
+      .profile{width:260px;height:260px;margin:0 auto}
+      .grid-3{grid-template-columns:1fr 1fr}
+      .project-card{
+        width: 240px;
+        height: 360px;
+      }
+    }
+    @media (max-width:520px){
+      nav a{display:none}
+      .grid-3{grid-template-columns:1fr}
+      .project-card{
+        width: 280px;
+        height: 360px;
+      }
+    }
+    .muted-small{color:var(--muted);font-size:13px}
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <div class="brand">
+        <div class="logo">ZA</div>
+        <div>
+          <div style="font-weight:700">Zahid Abbas</div>
+          <div class="muted-small">App Developer</div>
+        </div>
+      </div>
+      <nav>
+        <a href="#about">About</a>
+        <a href="#projects">Projects</a>
+        <a href="#contact">Contact</a>
+        <a href="https://github.com/Dev-Husnain" target="_blank" rel="noopener noreferrer">GitHub</a>
+      </nav>
+    </header>
+    <main>
+      <section class="hero">
+        <div class="card">
+          <h1>Hi – I'm <span style="color:var(--accent1)">Zahid</span>, Apps Developer</h1>
+          <p class="sub">I design, develop and publish high-quality Android apps using Java, Kotlin and Jetpack Compose. I build intuitive user experiences, integrate APIs, and optimize performance to deliver successful projects on the Play Store.</p>
+          <div class="cta">
+            <a class="btn btn-primary" href="#projects">View my work</a>
+            <a class="btn btn-ghost" href="#contact">Contact me</a>
+          </div>
+          <div style="margin-top:20px">
+            <strong>Tech:</strong> Kotlin • Jetpack Compose • Android SDK  • Firebase • REST APIs • Coroutines • MVVM • Clean Architecture • Multi-Module • DI(Koin & Hilt)
+          </div>
+        </div>
+        <aside class="profile-wrap">
+          <div class="profile" id="profileContainer">
+            <div class="profile-fallback">ZA</div>
+          </div>
+        </aside>
+      </section>
+      <section id="about">
+        <div class="card">
+          <h2>About Me</h2>
+          <p class="muted">I am an accomplished Android Apps Developer with a proven track record of designing, developing, and deploying high-quality applications on the Google Play Store. With deep proficiency in Java, Kotlin and Jetpack Compose, I translate innovative ideas into efficient and intuitive user experiences and collaborate well with cross-functional teams.</p>
+          <div style="margin-top:14px" class="grid-3">
+            <div class="skill">
+              <h4>Languages</h4>
+              <div class="muted-small">Java, Kotlin</div>
+            </div>
+            <div class="skill">
+              <h4>Frameworks</h4>
+              <div class="muted-small">Jetpack Compose, Android SDK</div>
+            </div>
+            <div class="skill">
+              <h4>Backend & Services</h4>
+              <div class="muted-small">Firebase, REST APIs</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="projects">
+        <h2 style="margin-top:18px">Some Projects</h2>
+        <div class="projects-slider" id="projectsSlider">
+          <div class="projects-track" id="projectsTrack">
+            <!-- Projects will be dynamically generated -->
+          </div>
+        </div>
+      </section>
+
+      <section id="contact">
+        <h2 style="margin-top:18px">Get in Touch</h2>
+        <div class="card" style="display:flex;gap:18px;flex-direction:column">
+          <div class="contact-cards">
+            <a class="contact-card" href="mailto:mrhow.dev@gmail.com">
+              <div class="icon">✉️</div>
+              <div>
+                <div style="font-weight:700">Email</div>
+                <div class="muted-small">mrhow.dev@gmail.com</div>
+              </div>
+            </a>
+            <a class="contact-card" href="https://www.linkedin.com/in/zahid-abbas-7512a82b0/" target="_blank" rel="noopener noreferrer">
+              <div class="icon">in</div>
+              <div>
+                <div style="font-weight:700">LinkedIn</div>
+                <div class="muted-small">/in/zahid-abbas-7512a82b0</div>
+              </div>
+            </a>
+            <a class="contact-card" href="https://github.com/Dev-Husnain" target="_blank" rel="noopener noreferrer">
+              <div class="icon">GH</div>
+              <div>
+                <div style="font-weight:700">GitHub</div>
+                <div class="muted-small">/Dev-Husnain</div>
+              </div>
+            </a>
+            <a class="contact-card" href="https://wa.me/92325-1023827" target="_blank" rel="noopener noreferrer">
+              <div class="icon">💬</div>
+              <div>
+                <div style="font-weight:700">WhatsApp</div>
+                <div class="muted-small">+92 325 1023827</div>
+              </div>
+            </a>
+            <a class="contact-card" href="tel:+92325-1023827">
+              <div class="icon">📞</div>
+              <div>
+                <div style="font-weight:700">Call</div>
+                <div class="muted-small">+92 325 1023827</div>
+              </div>
+            </a>
+            <div class="contact-card">
+              <div class="icon">📍</div>
+              <div>
+                <div style="font-weight:700">Address</div>
+                <div class="muted-small">Multan, Punjab, Pakistan</div>
+              </div>
+            </div>
+          </div>
+          <div style="margin-top:8px">
+            <form id="contactForm">
+              <h3>Send me a message</h3>
+              <div style="display:flex;gap:8px;flex-wrap:wrap">
+                <input placeholder="Your name" name="name" style="flex:1;padding:10px;border-radius:8px;border:1px solid rgba(255,255,255,0.2);background:transparent;color:#e6eef8" required>
+                <input placeholder="Your email" name="email" type="email" style="flex:1;padding:10px;border-radius:8px;border:1px solid rgba(255,255,255,0.2);background:transparent;color:#e6eef8" required>
+              </div>
+              <textarea placeholder="Message" name="message" rows="5" style="width:100%;margin-top:8px;padding:10px;border-radius:8px;border:1px solid rgba(255,255,255,0.2);background:transparent;color:#e6eef8" required></textarea>
+              <div style="margin-top:8px;display:flex;gap:8px">
+                <button type="submit" class="btn btn-primary">Send message</button>
+                <button type="reset" class="btn btn-ghost">Reset</button>
+              </div>
+              <div id="formStatus" class="muted-small" style="margin-top:8px"></div>
+            </form>
+            <script>
+              document.getElementById('contactForm').addEventListener('submit', async function(e){
+                e.preventDefault();
+                const f = e.target;
+                const statusEl = document.getElementById('formStatus');
+                const submitBtn = f.querySelector('button[type="submit"]');
+                
+                if(!f.name.value || !f.email.value || !f.message.value){
+                  statusEl.textContent = 'Please fill in all fields.';
+                  statusEl.style.color = '#ef4444';
+                  setTimeout(() => { statusEl.textContent = ''; }, 3000);
+                  return;
+                }
+                
+                // Disable button and show loading
+                submitBtn.disabled = true;
+                submitBtn.textContent = 'Sending...';
+                statusEl.textContent = 'Sending your message...';
+                statusEl.style.color = '#60a5fa';
+                
+                try {
+                  // Using Web3Forms - Replace YOUR_ACCESS_KEY with your actual key
+                  const formData = new FormData();
+                  formData.append('access_key', '210d0a32-0cf0-4be6-af91-f9da3c88e332');
+                  formData.append('name', f.name.value);
+                  formData.append('email', f.email.value);
+                  formData.append('message', f.message.value);
+                  formData.append('subject', 'New Contact from - ' + f.name.value);
+                  formData.append('from_name', 'Website Contact Form');
+                  
+                  const response = await fetch('https://api.web3forms.com/submit', {
+                    method: 'POST',
+                    body: formData
+                  });
+                  
+                  const data = await response.json();
+                  
+                  if(data.success){
+                    statusEl.textContent = '✓ Message sent successfully!';
+                    statusEl.style.color = '#6ee7b7';
+                    f.reset();
+                    setTimeout(() => { statusEl.textContent = ''; }, 5000);
+                  } else {
+                    throw new Error(data.message || 'Failed to send');
+                  }
+                } catch(error) {
+                  console.error('Send Error:', error);
+                  statusEl.textContent = '✗ Failed to send.';
+                  statusEl.style.color = '#ef4444';
+                  
+                  // Fallback to mailto
+                  setTimeout(() => {
+                    const subject = encodeURIComponent('Website contact from ' + f.name.value);
+                    const body = encodeURIComponent(
+                      'Name: ' + f.name.value + '\n' +
+                      'Email: ' + f.email.value + '\n\n' +
+                      'Message:\n' + f.message.value
+                    );
+                    window.location.href = 'mailto:mrhow.dev@gmail.com?subject=' + subject + '&body=' + body;
+                  }, 1000);
+                } finally {
+                  submitBtn.disabled = false;
+                  submitBtn.textContent = 'Send message';
+                }
+              });
+            </script>
+          </div>
+        </div>
+      </section>
+
+      <footer>
+        <div class="muted-small">© 2025 Zahid Abbas – Android Developer. Built with ❤️</div>
+      </footer>
+    </main>
+
+    <script>
+    // Profile image loading with URL and asset fallback
+    (function(){
+      const profileContainer = document.getElementById('profileContainer');
+      
+      // Configuration: Set your profile image URL or asset path here
+      const profileImageUrl = ''; // e.g., 'https://example.com/profile.jpg'
+      const profileImageAsset = 'assets/profile.jpeg';
+      
+      function loadProfileImage() {
+        const img = new Image();
+        
+        img.onload = function() {
+          profileContainer.innerHTML = '<img src="' + img.src + '" alt="Zahid Abbas – Profile photo" />';
+        };
+        
+        img.onerror = function() {
+          // If URL fails, try asset
+          if (img.src !== profileImageAsset && profileImageAsset) {
+            const assetImg = new Image();
+            assetImg.onload = function() {
+              profileContainer.innerHTML = '<img src="' + assetImg.src + '" alt="Zahid Abbas – Profile photo" />';
+            };
+            assetImg.onerror = function() {
+              // Keep fallback text
+            };
+            assetImg.src = profileImageAsset;
+          }
+        };
+        
+        // Try URL first, then asset
+        if (profileImageUrl) {
+          img.src = profileImageUrl;
+        } else if (profileImageAsset) {
+          img.src = profileImageAsset;
+        }
+      }
+      
+      loadProfileImage();
+    })();
+
+    // Projects data with image support (URL or asset)
+    const projectsData = [
+      {
+        title: 'Street View',
+        shortCode: 'SV',
+        description: 'Explore Live earth map in HD and Navigate easy and fast Driving Directions of your desired routes with voice navigation & street view. You can find Satellite view of famous places with directions, real-time traffic and your desired places.',
+        link: 'https://play.google.com/store/apps/details?id=com.streetview.map.directions.gps.navigation',
+        imageUrl: 'https://play-lh.googleusercontent.com/XU6-1jmhjR0ri4tfkzgZF7In3QC1xRd41pc8-SMQHKvtSAUGbTGWzd8mPZoF7PT7hAA=w1052-h592-rw',
+        imageAsset: ''
+      },
+      {
+        title: 'Translate All Languages',
+        shortCode: 'TL',
+        description: 'Translate all languages gives you a solution for breaking down language barriers, when you are connecting with the people from different languages and cultures. This Language Translator app provides a effortless experience to translation.',
+        link: 'https://play.google.com/store/apps/details?id=com.translate.all.languages.image.voice.text.translator',
+        imageUrl: 'https://play-lh.googleusercontent.com/NJFff-IT6YvsyE6ABhBJ_kQCql_C01cCaX7a4cng5Pq-eyRnlyEwRTWPnRm3JxsIKA=w1052-h592-rw',
+        imageAsset: ''
+      },
+      {
+        title: 'Voice Recorder - Voice Memos',
+        shortCode: 'VR',
+        description: 'Voice Recorder - Voice Memos App is a very easy to use that can help you to record important moments. Easily record meetings, classes, personal notes, songs, and much more.',
+        link: 'https://play.google.com/store/apps/details?id=com.voicerecorder.recording.audiorecorder',
+        imageUrl: 'https://play-lh.googleusercontent.com/tmC7ZR1xkpk-zLLmSCuGzZdwxmYS4xsonqOcxcE_Cnd34LZ2JFQ7UXjPh6IGZ8-0OQ=w1052-h592-rw',
+        imageAsset: ''
+      },
+      {
+        title: 'Recover Deleted Message',
+        shortCode: 'RDM',
+        description: 'Never miss any important message again with this all-in-one Message Recovery App and Status Saver. Instantly recover deleted messages from WA with ease, and save photo or video statuses directly to your device. Send direct messages without saving numbers and enjoy secure messaging and private chat features. Perfect for personal, professional, and business use, this app gives you full control over your chats 🔒',
+        link: 'https://play.google.com/store/apps/details?id=com.app.vchatmate',
+        imageUrl: 'https://play-lh.googleusercontent.com/fSrSKsMmVurl-aJ-EUp9JpTldop-lJrds7zKcVbX1uhayHLy8_1yYBySqBiwA9nUg0bOw3HJeeqctUcuKzrs=w1052-h592-rw',
+        imageAsset: ''
+      },
+      {
+        title: 'Notes App – Secure Notepad',
+        shortCode: 'NA-SN',
+        description: '✨ A Smarter Way to Take Notes – Simple, Secure & Completely Offline This Notes App is designed for users who want a clean, reliable, and distraction-free note-taking experience. Whether you prefer writing short memos, maintaining a personal journal, drafting ideas, or keeping private notes safe, this offline notepad helps you stay organized anywhere — without depending on the internet.',
+        link: 'https://play.google.com/store/apps/details?id=com.app.simplenotemate',
+        imageUrl: 'https://play-lh.googleusercontent.com/f0e8Rj1RhjMwbPOkwA-HkPPQpmZaEzGJFalWZLYv7CzMrVURk1vm6ab6uwFrIzz0yCd-MAkOd_UpBlE5xNilgqk=w1052-h592-rw',
+        imageAsset: ''
+      },
+      
+    ];
+
+    // Generate project cards
+    (function(){
+      const track = document.getElementById('projectsTrack');
+      
+      projectsData.forEach(project => {
+        const link = document.createElement('a');
+        link.className = 'project-card-link';
+        link.href = project.link;
+        link.target = '_blank';
+        link.rel = 'noopener noreferrer';
+        
+        const card = document.createElement('div');
+        card.className = 'project-card';
+        
+        const imageDiv = document.createElement('div');
+        imageDiv.className = 'project-image';
+        
+        // Create fallback text
+        const fallbackText = document.createElement('span');
+        fallbackText.className = 'project-image-text';
+        fallbackText.textContent = project.shortCode;
+        imageDiv.appendChild(fallbackText);
+        
+        // Try to load image (URL first, then asset)
+        if (project.imageUrl || project.imageAsset) {
+          const img = new Image();
+          
+          img.onload = function() {
+            fallbackText.style.display = 'none';
+            const actualImg = document.createElement('img');
+            actualImg.src = img.src;
+            actualImg.alt = project.title;
+            imageDiv.appendChild(actualImg);
+          };
+          
+          img.onerror = function() {
+            // If URL fails and asset exists, try asset
+            if (img.src !== project.imageAsset && project.imageAsset) {
+              const assetImg = new Image();
+              assetImg.onload = function() {
+                fallbackText.style.display = 'none';
+                const actualImg = document.createElement('img');
+                actualImg.src = assetImg.src;
+                actualImg.alt = project.title;
+                imageDiv.appendChild(actualImg);
+              };
+              assetImg.onerror = function() {
+                // Keep fallback text visible
+              };
+              assetImg.src = project.imageAsset;
+            }
+            // Otherwise keep fallback text visible
+          };
+          
+          // Try URL first, or asset if no URL
+          img.src = project.imageUrl || project.imageAsset;
+        }
+        
+        const body = document.createElement('div');
+        body.className = 'project-body';
+        
+        const title = document.createElement('h3');
+        title.textContent = project.title;
+        
+        const desc = document.createElement('p');
+        desc.innerHTML = project.description;
+        
+        body.appendChild(title);
+        body.appendChild(desc);
+        
+        card.appendChild(imageDiv);
+        card.appendChild(body);
+        link.appendChild(card);
+        track.appendChild(link);
+      });
+    })();
+
+    // Auto-scroll and drag functionality
+    (function(){
+      const container = document.getElementById('projectsSlider');
+      const track = document.getElementById('projectsTrack');
+      if (!container || !track) return;
+
+      const projectLinks = document.querySelectorAll('.project-card-link');
+      let isPointerDown = false;
+      let startX = 0;
+      let startY = 0;
+      let scrollLeft = 0;
+      let hasMoved = false;
+      let isHover = false;
+      let autoId = null;
+      const moveThreshold = 5;
+
+      function startAuto(){
+        stopAuto();
+        autoId = setInterval(()=>{
+          if(!isPointerDown && !isHover){
+            container.scrollLeft += 0.6;
+            if(container.scrollLeft + container.clientWidth >= container.scrollWidth - 1){
+              container.scrollLeft = 0;
+            }
+          }
+        }, 16);
+      }
+
+      function stopAuto(){
+        if(autoId) clearInterval(autoId);
+      }
+
+      projectLinks.forEach(link => {
+        link.addEventListener('click', (e) => {
+          if(hasMoved) {
+            e.preventDefault();
+            e.stopPropagation();
+          }
+        });
+      });
+
+      track.addEventListener('pointerdown', (e)=>{
+        isPointerDown = true;
+        hasMoved = false;
+        startX = e.clientX;
+        startY = e.clientY;
+        scrollLeft = container.scrollLeft;
+        stopAuto();
+        container.classList.add('dragging');
+      });
+
+      track.addEventListener('pointermove', (e)=>{
+        if(!isPointerDown) return;
+        
+        const deltaX = e.clientX - startX;
+        const deltaY = e.clientY - startY;
+        const distance = Math.sqrt(deltaX * deltaX + deltaY * deltaY);
+        
+        if(distance > moveThreshold) {
+          hasMoved = true;
+          container.scrollLeft = scrollLeft - deltaX;
+        }
+      });
+
+      const release = () => {
+        if(isPointerDown) {
+          isPointerDown = false;
+          container.classList.remove('dragging');
+          
+          setTimeout(() => {
+            hasMoved = false;
+          }, 10);
+          
+          startAuto();
+        }
+      };
+
+      track.addEventListener('pointerup', release);
+      track.addEventListener('pointercancel', release);
+      document.addEventListener('pointerup', release);
+
+      container.addEventListener('mouseenter', () => {
+        isHover = true;
+        stopAuto();
+      });
+
+      container.addEventListener('mouseleave', () => {
+        isHover = false;
+        if(!isPointerDown) startAuto();
+      });
+
+      container.addEventListener('wheel', (e) => {
+        // Map vertical scroll to horizontal if present (common on touchpads)
+        const delta = Math.abs(e.deltaX) > Math.abs(e.deltaY) ? e.deltaX : e.deltaY;
+        if (delta !== 0) {
+          e.preventDefault();
+          container.scrollLeft += delta;
+        }
+      }, { passive: false });
+
+      startAuto();
+    })();
+    </script>
+  </div>
+</body>
+</html>
